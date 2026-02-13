@@ -109,7 +109,17 @@ The following tasks can be added to an Ansible playbook to fully provision a new
     state: present
 ```
 
-> **Note:** CoC extensions will auto-install on first interactive neovim session. If you need them provisioned non-interactively, you can add a task that runs `nvim --headless +"CocInstall -sync coc-omnisharp coc-prettier coc-pyright" +qall`.
+> **Note:** CoC extensions will auto-install on first interactive neovim session. To provision them non-interactively, add the following task:
+
+```yaml
+- name: Install CoC extensions headlessly
+  ansible.builtin.shell: >
+    nvim --headless
+    +"CocInstall -sync coc-omnisharp coc-prettier coc-pyright"
+    +qall
+  args:
+    executable: /bin/bash
+```
 
 ## Updating
 
