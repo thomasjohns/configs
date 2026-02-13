@@ -1,0 +1,13 @@
+# bashrc extensions
+# Source this file from your main ~/.bashrc:
+#   if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi
+
+# --- Aliases ---
+
+# --- Environment Variables ---
+
+# --- PATH additions ---
+
+# --- Prompt ---
+
+# --- Functions ---
