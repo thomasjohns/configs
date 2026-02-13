@@ -3,11 +3,33 @@
 #   if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi
 
 # --- Aliases ---
+alias l='eza'
+alias la='eza -a'
+alias ll='eza -lah'
+alias ls='eza --color=auto'
+alias j='just'
+alias k='kubectl'
+alias gc='gcloud'
 
 # --- Environment Variables ---
+export EDITOR=nvim
+export VISUAL=nvim
 
 # --- PATH additions ---
 
 # --- Prompt ---
 
 # --- Functions ---
+
+# nvim on changed files from git status
+nvim-changed() {
+    git status --porcelain | rg ' M ' | sd ' M ' '' | xargs nvim;
+}
+
+last-status() {
+    echo $?;
+}
+
+git-branch-prune() {
+    git branch --merged | grep -v '^\*' | grep -v 'main$' | grep -v 'master$' | xargs git branch -d
+}
