@@ -1,15 +1,63 @@
 {
-    // --- Editor ---
+  // --- Editor ---
 
-    // --- Theme / Appearance ---
+  // --- Theme / Appearance ---
 
-    // --- Files ---
+  // --- Files ---
 
-    // --- Terminal ---
+  // --- Terminal ---
 
-    // --- Extensions ---
+  // --- Extensions ---
 
-    // --- Language-Specific Overrides ---
-    // "[python]": {},
-    // "[typescript]": {},
+  // --- Python Tooling ---
+  // Toggle between profiles by commenting/uncommenting the sections below.
+  //
+  // PROFILE: Pylance only (default VS Code experience)
+  //   Pylance handles linting, type checking, formatting, and language services.
+  //   Disable ruff and ty extensions or leave their settings off.
+  //
+  // "python.languageServer": "Pylance",
+  //
+  // PROFILE: Ruff + ty (Astral tools, Pylance disabled)
+  //   Ruff handles linting and formatting. ty handles type checking.
+  //   ty disables Pylance by default, so no extra config needed.
+  //
+  // "ruff.enable": true,
+  // "[python]": {
+  //   "editor.defaultFormatter": "charliermarsh.ruff",
+  //   "editor.formatOnSave": true,
+  //   "editor.codeActionsOnSave": {
+  //     "source.fixAll.ruff": "explicit",
+  //     "source.organizeImports.ruff": "explicit"
+  //   }
+  // },
+  //
+  // PROFILE: Ruff + ty + Pylance (all three, best of each)
+  //   Pylance handles hover, completions, and go-to-definition.
+  //   Ruff handles linting and formatting.
+  //   ty handles type checking diagnostics only (language services disabled).
+  //
+  // "python.languageServer": "Pylance",
+  // "python.analysis.typeCheckingMode": "off",
+  // "ruff.enable": true,
+  // "ty.disableLanguageServices": true,
+  // "[python]": {
+  //   "editor.defaultFormatter": "charliermarsh.ruff",
+  //   "editor.formatOnSave": true,
+  //   "editor.codeActionsOnSave": {
+  //     "source.fixAll.ruff": "explicit",
+  //     "source.organizeImports.ruff": "explicit"
+  //   }
+  // },
+
+  // --- Language-Specific Overrides ---
+  // "[typescript]": {},
+  "editor.minimap.enabled": false,
+  "workbench.colorTheme": "Gruvbox Dark Medium",
+  "workbench.editor.enablePreview": false,
+  "git.ignoreMissingGitWarning": true,
+  "editor.cursorStyle": "block-outline",
+  "explorer.confirmDelete": false,
+  "window.zoomLevel": -1,
+  "files.eol": "\n"
 }
