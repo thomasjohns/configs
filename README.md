@@ -31,7 +31,7 @@ The install script will set everything up, but the following should be installed
 1. Clone this repo:
 
 ```bash
-git clone <your-repo-url> ~/configs
+git clone https://github.com/thomasjohns/configs ~/configs
 cd ~/configs
 ```
 
@@ -75,7 +75,7 @@ The nvim config supports both vimscript and Lua simultaneously:
 
 ## Ansible provisioning
 
-The following tasks can be added to an Ansible playbook to fully provision a new server with these configs. Replace `<your-repo-url>` and adjust `ansible_user_dir` as needed.
+The following tasks can be added to an Ansible playbook to fully provision a new server with these configs. Adjust `ansible_user_dir` as needed.
 
 ```yaml
 - name: Install prerequisites
@@ -93,7 +93,7 @@ The following tasks can be added to an Ansible playbook to fully provision a new
 
 - name: Clone configs repo
   ansible.builtin.git:
-    repo: "<your-repo-url>"
+    repo: "https://github.com/thomasjohns/configs"
     dest: "{{ ansible_user_dir }}/configs"
     version: main
 
