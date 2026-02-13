@@ -12,11 +12,16 @@ declare -A LINKS=(
     ["bash/.bashrc_ext"]="$HOME/.bashrc_ext"
 )
 
-for src in "${!LINKS[@]}"; do
-    target="${LINKS[$src]}"
-    source_path="$REPO_DIR/$src"
+# VS Code settings.json is symlinked to two locations (local + remote SSH)
+VSCODE_TARGETS=(
+    "$HOME/.config/Code/User/settings.json"
+    "$HOME/.vscode-server/data/Machine/settings.json"
+)
 
-    # Create parent directory if needed
+link_file() {
+    local source_path="$1"
+    local target="$2"
+
     mkdir -p "$(dirname "$target")"
 
     if [ -L "$target" ]; then
@@ -29,6 +34,14 @@ for src in "${!LINKS[@]}"; do
 
     ln -s "$source_path" "$target"
     echo "Linked: $target -> $source_path"
+}
+
+for src in "${!LINKS[@]}"; do
+    link_file "$REPO_DIR/$src" "${LINKS[$src]}"
+done
+
+for target in "${VSCODE_TARGETS[@]}"; do
+    link_file "$REPO_DIR/vscode/settings.json" "$target"
 done
 
 # --- vim-plug (neovim plugin manager) ---

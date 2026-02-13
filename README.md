@@ -12,6 +12,7 @@ configs/
 │   ├── init.vim           # current vimscript configuration
 │   └── coc-settings.json  # CoC language server settings
 ├── bash/.bashrc_ext       # bash extensions (aliases, functions, etc.)
+├── vscode/settings.json   # VS Code settings (local + remote SSH)
 ├── install.sh             # symlink installer + plugin setup
 └── README.md
 ```
@@ -56,6 +57,8 @@ The script will:
 | `~/.tmux.conf` | `~/configs/tmux/.tmux.conf` |
 | `~/.config/nvim` | `~/configs/nvim/` |
 | `~/.bashrc_ext` | `~/configs/bash/.bashrc_ext` |
+| `~/.config/Code/User/settings.json` | `~/configs/vscode/settings.json` |
+| `~/.vscode-server/data/Machine/settings.json` | `~/configs/vscode/settings.json` |
 
 3. Source the bash extensions by adding this line to your `~/.bashrc`:
 
