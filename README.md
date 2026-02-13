@@ -73,6 +73,44 @@ The nvim config supports both vimscript and Lua simultaneously:
 - Put your current vimscript config in `init.vim`.
 - As you migrate to Lua, move settings from `init.vim` into `init.lua` and delete them from `init.vim`.
 
+## Ansible provisioning
+
+The following tasks can be added to an Ansible playbook to fully provision a new server with these configs. Replace `<your-repo-url>` and adjust `ansible_user_dir` as needed.
+
+```yaml
+- name: Install prerequisites
+  become: true
+  ansible.builtin.apt:
+    name:
+      - git
+      - curl
+      - tmux
+      - neovim
+      - nodejs
+      - npm
+    state: present
+    update_cache: true
+
+- name: Clone configs repo
+  ansible.builtin.git:
+    repo: "<your-repo-url>"
+    dest: "{{ ansible_user_dir }}/configs"
+    version: main
+
+- name: Run install script
+  ansible.builtin.shell: "{{ ansible_user_dir }}/configs/install.sh"
+  args:
+    executable: /bin/bash
+
+- name: Source bashrc extensions from ~/.bashrc
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_user_dir }}/.bashrc"
+    line: 'if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi'
+    state: present
+```
+
+> **Note:** CoC extensions will auto-install on first interactive neovim session. If you need them provisioned non-interactively, you can add a task that runs `nvim --headless +"CocInstall -sync coc-omnisharp coc-prettier coc-pyright" +qall`.
+
 ## Updating
 
 Since configs are symlinked, pulling new changes takes effect immediately:
