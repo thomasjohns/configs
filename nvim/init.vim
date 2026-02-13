@@ -1,4 +1,6 @@
-synta on
+syntax on
+
+let mapleader = "\<Space>"
 
 set guicursor=
 set autoindent
@@ -40,6 +42,8 @@ map gb :split<cr>
 map <C-y> :NERDTreeToggle<CR>
 map ;; :Buffers<CR>
 
+" NOTE: gd/gr are mapped in the coc.nvim section below (without leader).
+" These leader variants are kept as alternatives.
 nmap <leader>gd <Plug>(coc-definition)
 nmap <leader>gr <Plug>(coc-references)
 nnoremap <C-g> :Files<CR>
@@ -103,8 +107,6 @@ let g:rustfmt_emit_files = 1
 let g:rustfmt_fail_silently = 0
 
 let NERDTreeShowHidden = 1
-
-let mapleader = "\<Space>"
 
 " WSL yank support
 set clipboard=unnamedplus
