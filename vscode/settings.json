@@ -50,6 +50,62 @@
   //   }
   // },
 
+  // --- Vim Extension (vscodevim) ---
+  "vim.leader": "<space>",
+  "vim.normalModeKeyBindingsNonRecursive": [
+    // --- Buffer (Editor Tab) Navigation ---
+    // gn -> next buffer
+    { "before": ["g", "n"], "commands": ["workbench.action.nextEditor"] },
+    // gp -> previous buffer
+    { "before": ["g", "p"], "commands": ["workbench.action.previousEditor"] },
+    // gw -> close buffer
+    { "before": ["g", "w"], "commands": ["workbench.action.closeActiveEditor"] },
+    // ;; -> show all open editors (buffer list)
+    { "before": [";", ";"], "commands": ["workbench.action.showAllEditors"] },
+
+    // --- Editor Splitting ---
+    // gs -> vertical split
+    { "before": ["g", "s"], "commands": ["workbench.action.splitEditorRight"] },
+    // gb -> horizontal split
+    { "before": ["g", "b"], "commands": ["workbench.action.splitEditorDown"] },
+
+    // --- Split Navigation ---
+    { "before": ["g", "j"], "commands": ["workbench.action.focusBelowGroup"] },
+    { "before": ["g", "k"], "commands": ["workbench.action.focusAboveGroup"] },
+    { "before": ["g", "l"], "commands": ["workbench.action.focusRightGroup"] },
+    { "before": ["g", "h"], "commands": ["workbench.action.focusLeftGroup"] },
+
+    // --- Code Navigation ---
+    { "before": ["g", "d"], "commands": ["editor.action.revealDefinition"] },
+    { "before": ["g", "y"], "commands": ["editor.action.goToTypeDefinition"] },
+    { "before": ["g", "i"], "commands": ["editor.action.goToImplementation"] },
+    { "before": ["g", "r"], "commands": ["editor.action.goToReferences"] },
+
+    // --- Hover / Documentation ---
+    { "before": ["K"], "commands": ["editor.action.showHover"] },
+
+    // --- Diagnostics Navigation ---
+    { "before": ["{"], "commands": ["editor.action.marker.prev"] },
+    { "before": ["}"], "commands": ["editor.action.marker.next"] },
+
+    // --- Git Hunk Navigation ---
+    { "before": ["("], "commands": ["workbench.action.editor.previousChange"] },
+    { "before": [")"], "commands": ["workbench.action.editor.nextChange"] },
+
+    // --- Leader Keybindings ---
+    { "before": ["<leader>", "r", "n"], "commands": ["editor.action.rename"] },
+    { "before": ["<leader>", "f"], "commands": ["editor.action.formatSelection"] },
+    { "before": ["<leader>", "q", "f"], "commands": ["editor.action.quickFix"] },
+    { "before": ["<leader>", "a", "c"], "commands": ["editor.action.codeAction"] },
+    { "before": ["<leader>", "a"], "commands": ["workbench.actions.view.problems"] },
+    { "before": ["<leader>", "o"], "commands": ["workbench.action.gotoSymbol"] },
+    { "before": ["<leader>", "s"], "commands": ["workbench.action.showAllSymbols"] },
+    { "before": ["<leader>", "c"], "commands": ["workbench.action.showCommands"] }
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    { "before": ["<leader>", "f"], "commands": ["editor.action.formatSelection"] }
+  ],
+
   // --- Language-Specific Overrides ---
   // "[typescript]": {},
   "editor.minimap.enabled": false,
