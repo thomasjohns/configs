@@ -12,9 +12,19 @@ configs/
 │   ├── init.vim           # current vimscript configuration
 │   └── coc-settings.json  # CoC language server settings
 ├── bash/.bashrc_ext       # bash extensions (aliases, functions, etc.)
-├── install.sh             # symlink installer
+├── install.sh             # symlink installer + plugin setup
 └── README.md
 ```
+
+## Prerequisites
+
+The install script will set everything up, but the following should be installed first:
+
+- **git** — required for cloning plugin managers
+- **curl** — required for downloading vim-plug
+- **neovim** — install via your package manager (e.g. `apt install neovim`)
+- **tmux** — install via your package manager (e.g. `apt install tmux`)
+- **node.js** — required by CoC (e.g. `apt install nodejs npm`)
 
 ## Setup on a new server
 
@@ -25,20 +35,35 @@ git clone <your-repo-url> ~/configs
 cd ~/configs
 ```
 
-2. Run the install script to create symlinks:
+2. Run the install script:
 
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
 
-This creates the following symlinks:
+The script will:
+
+- Create symlinks for all config files (backing up any existing files to `.bak`)
+- Install [vim-plug](https://github.com/junegunn/vim-plug) if not already present
+- Run `nvim +PlugInstall +qall` to install all neovim plugins headlessly
+- Clone [TPM](https://github.com/tmux-plugins/tpm) and install tmux plugins (tmux-yank)
+
+### Symlinks created
 
 | Symlink | Points to |
 |---|---|
 | `~/.tmux.conf` | `~/configs/tmux/.tmux.conf` |
 | `~/.config/nvim` | `~/configs/nvim/` |
 | `~/.bashrc_ext` | `~/configs/bash/.bashrc_ext` |
+
+3. Source the bash extensions by adding this line to your `~/.bashrc`:
+
+```bash
+if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi
+```
+
+4. Open neovim once to let CoC auto-install its extensions (coc-omnisharp, coc-prettier, coc-pyright).
 
 ### Neovim migration path
 
@@ -48,14 +73,6 @@ The nvim config supports both vimscript and Lua simultaneously:
 - Put your current vimscript config in `init.vim`.
 - As you migrate to Lua, move settings from `init.vim` into `init.lua` and delete them from `init.vim`.
 
-If a file already exists at the symlink location, it is backed up to `<filename>.bak`.
-
-3. Source the bash extensions by adding this line to your `~/.bashrc`:
-
-```bash
-if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi
-```
-
 ## Updating
 
 Since configs are symlinked, pulling new changes takes effect immediately:
@@ -64,4 +81,4 @@ Since configs are symlinked, pulling new changes takes effect immediately:
 cd ~/configs && git pull
 ```
 
-For tmux, reload with `tmux source-file ~/.tmux.conf`. For bash, start a new shell or run `source ~/.bashrc`.
+For neovim plugins, run `:PlugUpdate` inside neovim. For tmux plugins, press `prefix + U` in tmux. For bash, start a new shell or run `source ~/.bashrc`. For tmux, reload with `tmux source-file ~/.tmux.conf`.
