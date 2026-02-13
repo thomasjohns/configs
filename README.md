@@ -12,7 +12,9 @@ configs/
 │   ├── init.vim           # current vimscript configuration
 │   └── coc-settings.json  # CoC language server settings
 ├── bash/.bashrc_ext       # bash extensions (aliases, functions, etc.)
-├── vscode/settings.json   # VS Code settings (local + remote SSH)
+├── vscode/
+│   ├── settings.json      # VS Code settings (local + remote SSH)
+│   └── keybindings.json   # VS Code keybindings (neovim-style)
 ├── install.sh             # symlink installer + plugin setup
 └── README.md
 ```
@@ -59,6 +61,8 @@ The script will:
 | `~/.bashrc_ext` | `~/configs/bash/.bashrc_ext` |
 | `~/.config/Code/User/settings.json` | `~/configs/vscode/settings.json` |
 | `~/.vscode-server/data/Machine/settings.json` | `~/configs/vscode/settings.json` |
+| `~/.config/Code/User/keybindings.json` | `~/configs/vscode/keybindings.json` |
+| `~/.vscode-server/data/Machine/keybindings.json` | `~/configs/vscode/keybindings.json` |
 
 3. Source the bash extensions by adding this line to your `~/.bashrc`:
 

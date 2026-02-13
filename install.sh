@@ -44,6 +44,16 @@ for target in "${VSCODE_TARGETS[@]}"; do
     link_file "$REPO_DIR/vscode/settings.json" "$target"
 done
 
+# VS Code keybindings.json is symlinked to two locations (local + remote SSH)
+VSCODE_KEYBINDINGS_TARGETS=(
+    "$HOME/.config/Code/User/keybindings.json"
+    "$HOME/.vscode-server/data/Machine/keybindings.json"
+)
+
+for target in "${VSCODE_KEYBINDINGS_TARGETS[@]}"; do
+    link_file "$REPO_DIR/vscode/keybindings.json" "$target"
+done
+
 # --- vim-plug (neovim plugin manager) ---
 
 VIM_PLUG_URL="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
