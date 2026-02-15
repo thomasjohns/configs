@@ -33,3 +33,40 @@ last-status() {
 git-branch-prune() {
     git branch --merged | grep -v '^\*' | grep -v 'main$' | grep -v 'master$' | xargs git branch -d
 }
+
+wt() {
+    if [ -z "$1" ]; then
+        echo "Usage: wt <worktree-name>"
+        return 1
+    fi
+
+    local repo_root
+    repo_root="$(git rev-parse --show-toplevel 2>/dev/null)"
+    if [ $? -ne 0 ]; then
+        echo "Error: not inside a git repository"
+        return 1
+    fi
+
+    local wt_path="$repo_root/$1"
+
+    git worktree add "$wt_path" 2>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "Error: failed to create worktree '$1'"
+        return 1
+    fi
+
+    # Exclude the worktree directory from the outer repo's tracking
+    local exclude_file="$repo_root/.git/info/exclude"
+    if ! grep -qxF "$1" "$exclude_file" 2>/dev/null; then
+        echo "$1" >> "$exclude_file"
+    fi
+
+    # Copy gitignored files to the new worktree
+    local ignored_files
+    ignored_files="$(git -C "$repo_root" ls-files --others --ignored --exclude-standard)"
+    if [ -n "$ignored_files" ]; then
+        echo "$ignored_files" | rsync -a --files-from=- "$repo_root/" "$wt_path/"
+    fi
+
+    echo "Worktree '$1' created at $wt_path"
+}
