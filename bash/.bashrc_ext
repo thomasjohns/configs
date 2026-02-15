@@ -40,25 +40,37 @@ wt() {
         return 1
     fi
 
-    local repo_root
-    repo_root="$(git rev-parse --show-toplevel 2>/dev/null)"
+    local is_bare
+    is_bare="$(git rev-parse --is-bare-repository 2>/dev/null)"
     if [ $? -ne 0 ]; then
         echo "Error: not inside a git repository"
         return 1
     fi
 
-    local wt_path="$repo_root/$1"
+    if [ "$is_bare" = "true" ]; then
+        _wt_bare "$1"
+    else
+        _wt_normal "$1"
+    fi
+}
+
+_wt_normal() {
+    local name="$1"
+    local repo_root
+    repo_root="$(git rev-parse --show-toplevel)"
+
+    local wt_path="$repo_root/$name"
 
     git worktree add "$wt_path" 2>/dev/null
     if [ $? -ne 0 ]; then
-        echo "Error: failed to create worktree '$1'"
+        echo "Error: failed to create worktree '$name'"
         return 1
     fi
 
     # Exclude the worktree directory from the outer repo's tracking
     local exclude_file="$repo_root/.git/info/exclude"
-    if ! grep -qxF "$1" "$exclude_file" 2>/dev/null; then
-        echo "$1" >> "$exclude_file"
+    if ! grep -qxF "$name" "$exclude_file" 2>/dev/null; then
+        echo "$name" >> "$exclude_file"
     fi
 
     # Copy gitignored files to the new worktree
@@ -68,5 +80,41 @@ wt() {
         echo "$ignored_files" | rsync -a --files-from=- "$repo_root/" "$wt_path/"
     fi
 
-    echo "Worktree '$1' created at $wt_path"
+    echo "Worktree '$name' created at $wt_path"
+}
+
+_wt_bare() {
+    local name="$1"
+    local bare_root
+    bare_root="$(cd "$(git rev-parse --git-dir)" && pwd)"
+
+    local wt_path="$bare_root/$name"
+
+    git worktree add "$wt_path" 2>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "Error: failed to create worktree '$name'"
+        return 1
+    fi
+
+    # For non-main/master worktrees, copy gitignored files from the primary worktree
+    if [ "$name" != "main" ] && [ "$name" != "master" ]; then
+        local primary_wt=""
+        if [ -d "$bare_root/main" ]; then
+            primary_wt="$bare_root/main"
+        elif [ -d "$bare_root/master" ]; then
+            primary_wt="$bare_root/master"
+        fi
+
+        if [ -n "$primary_wt" ]; then
+            local ignored_files
+            ignored_files="$(git -C "$primary_wt" ls-files --others --ignored --exclude-standard)"
+            if [ -n "$ignored_files" ]; then
+                echo "$ignored_files" | rsync -a --files-from=- "$primary_wt/" "$wt_path/"
+            fi
+        else
+            echo "Warning: no main or master worktree found to copy gitignored files from"
+        fi
+    fi
+
+    echo "Worktree '$name' created at $wt_path"
 }
