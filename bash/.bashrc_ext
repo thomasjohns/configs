@@ -91,6 +91,18 @@ _wt_bare() {
     local name="$1"
     local bare_root="$2"
 
+    # Resolve the actual default branch name from HEAD
+    local default_branch
+    default_branch="$(git -C "$bare_root" symbolic-ref --short HEAD 2>/dev/null)"
+
+    # If user typed "main" or "master", use the actual default branch name
+    if [ "$name" = "main" ] || [ "$name" = "master" ]; then
+        if [ -n "$default_branch" ] && [ "$name" != "$default_branch" ]; then
+            echo "Note: default branch is '$default_branch', using that instead of '$name'"
+            name="$default_branch"
+        fi
+    fi
+
     local wt_path="$bare_root/$name"
 
     git worktree add "$wt_path" 2>/dev/null
@@ -99,13 +111,11 @@ _wt_bare() {
         return 1
     fi
 
-    # For non-main/master worktrees, copy gitignored files from the primary worktree
-    if [ "$name" != "main" ] && [ "$name" != "master" ]; then
+    # For non-default-branch worktrees, copy gitignored files from the primary worktree
+    if [ "$name" != "$default_branch" ]; then
         local primary_wt=""
-        if [ -d "$bare_root/main" ]; then
-            primary_wt="$bare_root/main"
-        elif [ -d "$bare_root/master" ]; then
-            primary_wt="$bare_root/master"
+        if [ -n "$default_branch" ] && [ -d "$bare_root/$default_branch" ]; then
+            primary_wt="$bare_root/$default_branch"
         fi
 
         if [ -n "$primary_wt" ]; then
@@ -115,7 +125,7 @@ _wt_bare() {
                 echo "$ignored_files" | rsync -a --files-from=- "$primary_wt/" "$wt_path/"
             fi
         else
-            echo "Warning: no main or master worktree found to copy gitignored files from"
+            echo "Warning: no '$default_branch' worktree found to copy gitignored files from"
         fi
     fi
 
