@@ -30,6 +30,31 @@ last-status() {
     echo $?;
 }
 
+cpignored() {
+    if [ -z "$1" ] || [ -z "$2" ]; then
+        echo "Usage: cpignored <src> <dest>"
+        return 1
+    fi
+
+    local src="$(cd "$1" && pwd)"
+    local dest="$(cd "$2" && pwd)"
+
+    if ! git -C "$src" rev-parse --git-dir >/dev/null 2>&1; then
+        echo "Error: '$1' is not inside a git repository"
+        return 1
+    fi
+
+    local ignored_files
+    ignored_files="$(git -C "$src" ls-files --others --ignored --exclude-standard)"
+    if [ -z "$ignored_files" ]; then
+        echo "No gitignored files found in '$1'"
+        return 0
+    fi
+
+    echo "$ignored_files" | rsync -a --files-from=- "$src/" "$dest/"
+    echo "Copied gitignored files from '$1' to '$2'"
+}
+
 git-branch-prune() {
     git branch --merged | grep -v '^\*' | grep -v 'main$' | grep -v 'master$' | xargs git branch -d
 }
