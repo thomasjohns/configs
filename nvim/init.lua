@@ -5,7 +5,7 @@
 
 -- Source the vimscript config
 local config_dir = vim.fn.stdpath("config")
-vim.cmd("source " .. config_dir .. "/init.vim")
+vim.cmd("source " .. config_dir .. "/legacy_init.vim")
 
 -- --- Lua Options ---
 
