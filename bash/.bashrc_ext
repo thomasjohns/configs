@@ -130,6 +130,14 @@ cpchanges() {
     echo "Copied changed and untracked files from '$1' to '$2'"
 }
 
+bare() {
+    if [ -z "$1" ]; then
+        echo "Usage: bare <repo-name>"
+        return 1
+    fi
+    git init --bare --initial-branch=main "$1.git"
+}
+
 git-branch-prune() {
     git branch --merged | grep -v '^\*' | grep -v 'main$' | grep -v 'master$' | xargs git branch -d
 }
