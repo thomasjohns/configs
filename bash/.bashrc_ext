@@ -136,6 +136,7 @@ bare() {
         return 1
     fi
     git init --bare --initial-branch=main "$1.git"
+    git -C "$1.git" worktree add --orphan main
 }
 
 git-branch-prune() {
