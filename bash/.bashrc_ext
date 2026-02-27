@@ -55,6 +55,81 @@ cpignored() {
     echo "Copied gitignored files from '$1' to '$2'"
 }
 
+cpunstaged() {
+    if [ -z "$1" ] || [ -z "$2" ]; then
+        echo "Usage: cpunstaged <src> <dest>"
+        return 1
+    fi
+
+    local src="$(cd "$1" && pwd)"
+    local dest="$(cd "$2" && pwd)"
+
+    if ! git -C "$src" rev-parse --git-dir >/dev/null 2>&1; then
+        echo "Error: '$1' is not inside a git repository"
+        return 1
+    fi
+
+    local unstaged_files
+    unstaged_files="$(git -C "$src" diff --name-only)"
+    if [ -z "$unstaged_files" ]; then
+        echo "No unstaged changes found in '$1'"
+        return 0
+    fi
+
+    echo "$unstaged_files" | rsync -a --files-from=- "$src/" "$dest/"
+    echo "Copied unstaged files from '$1' to '$2'"
+}
+
+cpuntracked() {
+    if [ -z "$1" ] || [ -z "$2" ]; then
+        echo "Usage: cpuntracked <src> <dest>"
+        return 1
+    fi
+
+    local src="$(cd "$1" && pwd)"
+    local dest="$(cd "$2" && pwd)"
+
+    if ! git -C "$src" rev-parse --git-dir >/dev/null 2>&1; then
+        echo "Error: '$1' is not inside a git repository"
+        return 1
+    fi
+
+    local untracked_files
+    untracked_files="$(git -C "$src" ls-files --others --exclude-standard)"
+    if [ -z "$untracked_files" ]; then
+        echo "No untracked files found in '$1'"
+        return 0
+    fi
+
+    echo "$untracked_files" | rsync -a --files-from=- "$src/" "$dest/"
+    echo "Copied untracked files from '$1' to '$2'"
+}
+
+cpchanges() {
+    if [ -z "$1" ] || [ -z "$2" ]; then
+        echo "Usage: cpchanges <src> <dest>"
+        return 1
+    fi
+
+    local src="$(cd "$1" && pwd)"
+    local dest="$(cd "$2" && pwd)"
+
+    if ! git -C "$src" rev-parse --git-dir >/dev/null 2>&1; then
+        echo "Error: '$1' is not inside a git repository"
+        return 1
+    fi
+
+    local changed_files
+    changed_files="$({ git -C "$src" diff --name-only; git -C "$src" ls-files --others --exclude-standard; } | sort -u)"
+    if [ -z "$changed_files" ]; then
+        echo "No changed or untracked files found in '$1'"
+        return 0
+    fi
+
+    echo "$changed_files" | rsync -a --files-from=- "$src/" "$dest/"
+    echo "Copied changed and untracked files from '$1' to '$2'"
+}
+
 git-branch-prune() {
     git branch --merged | grep -v '^\*' | grep -v 'main$' | grep -v 'master$' | xargs git branch -d
 }
