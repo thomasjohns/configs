@@ -240,3 +240,84 @@ _wt_bare() {
 
     echo "Worktree '$name' created at $wt_path"
 }
+
+agents() {
+    if [ -z "$1" ]; then
+        echo "Usage: agents <number>"
+        return 1
+    fi
+
+    local n="$1"
+
+    if ! git rev-parse --git-dir >/dev/null 2>&1; then
+        echo "Error: not inside a git repository"
+        return 1
+    fi
+
+    # Determine worktree creation base directory
+    local git_common_dir
+    git_common_dir="$(cd "$(git rev-parse --git-common-dir)" && pwd)"
+    local is_bare
+    is_bare="$(git config -f "$git_common_dir/config" --get core.bare 2>/dev/null)"
+    local wt_base
+    if [ "$is_bare" = "true" ]; then
+        wt_base="$git_common_dir"
+    else
+        wt_base="$(git rev-parse --show-toplevel)"
+    fi
+
+    # Resolve or create worktrees
+    local wt_paths=()
+    for i in $(seq 1 "$n"); do
+        local wt_name="agent$i"
+        local wt_path
+        wt_path="$(git worktree list --porcelain | grep "^worktree " | sed 's/^worktree //' | grep "/${wt_name}$" | head -1)"
+        if [ -z "$wt_path" ]; then
+            (cd "$wt_base" && wt "$wt_name") || { echo "Failed to create worktree $wt_name"; return 1; }
+            wt_path="$(git worktree list --porcelain | grep "^worktree " | sed 's/^worktree //' | grep "/${wt_name}$" | head -1)"
+        fi
+        if [ -z "$wt_path" ]; then
+            echo "Error: could not find or create worktree '$wt_name'"
+            return 1
+        fi
+        wt_paths+=("$wt_path")
+    done
+
+    # Set up tmux
+    local first_pane
+    if [ -n "$TMUX" ]; then
+        first_pane="$(tmux display-message -p '#{pane_id}')"
+        tmux send-keys -t "$first_pane" "cd '${wt_paths[0]}'" C-m
+    else
+        tmux new-session -d -s agents -c "${wt_paths[0]}"
+        first_pane="$(tmux list-panes -t agents:0 -F '#{pane_id}' | head -1)"
+    fi
+
+    # Create columns via horizontal splits
+    local col_panes=("$first_pane")
+    local last_pane="$first_pane"
+    for i in $(seq 2 "$n"); do
+        local new_pane
+        new_pane="$(tmux split-window -h -t "$last_pane" -c "${wt_paths[$((i-1))]}" -P -F '#{pane_id}')"
+        col_panes+=("$new_pane")
+        last_pane="$new_pane"
+    done
+
+    # Even out columns
+    tmux select-layout -t "$first_pane" even-horizontal
+
+    # Split each column into top/bottom rows
+    for i in $(seq 0 $((n-1))); do
+        tmux split-window -v -t "${col_panes[$i]}" -c "${wt_paths[$i]}"
+    done
+
+    # Start claude in each top pane
+    for pane in "${col_panes[@]}"; do
+        tmux send-keys -t "$pane" "claude --dangerously-skip-permissions" C-m
+    done
+
+    # Attach if we created a new session
+    if [ -z "$TMUX" ]; then
+        tmux attach-session -t agents
+    fi
+}
