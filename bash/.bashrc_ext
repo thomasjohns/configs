@@ -243,11 +243,22 @@ _wt_bare() {
 
 agents() {
     if [ -z "$1" ]; then
-        echo "Usage: agents <number>"
+        echo "Usage: agents <number> [agent]"
+        echo "  agent: claude (default), copilot"
         return 1
     fi
 
     local n="$1"
+    local agent="${2:-claude}"
+    local agent_cmd
+    case "$agent" in
+        claude)  agent_cmd="claude --dangerously-skip-permissions" ;;
+        copilot) agent_cmd="copilot --yolo" ;;
+        *)
+            echo "Error: unknown agent '$agent' (supported: claude, copilot)"
+            return 1
+            ;;
+    esac
 
     if ! git rev-parse --git-dir >/dev/null 2>&1; then
         echo "Error: not inside a git repository"
@@ -311,9 +322,9 @@ agents() {
         tmux split-window -v -t "${col_panes[$i]}" -c "${wt_paths[$i]}"
     done
 
-    # Start claude in each top pane
+    # Start agent in each top pane
     for pane in "${col_panes[@]}"; do
-        tmux send-keys -t "$pane" "claude --dangerously-skip-permissions" C-m
+        tmux send-keys -t "$pane" "$agent_cmd" C-m
     done
 
     # Attach if we created a new session
