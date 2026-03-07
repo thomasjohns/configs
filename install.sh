@@ -5,19 +5,6 @@ REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # --- Symlinks ---
 
-# Map of source files/dirs (relative to repo) -> symlink targets
-declare -A LINKS=(
-    ["tmux/.tmux.conf"]="$HOME/.tmux.conf"
-    ["nvim"]="$HOME/.config/nvim"
-    ["bash/.bashrc_ext"]="$HOME/.bashrc_ext"
-)
-
-# VS Code settings.json is symlinked to two locations (local + remote SSH)
-VSCODE_TARGETS=(
-    "$HOME/.config/Code/User/settings.json"
-    "$HOME/.vscode-server/data/Machine/settings.json"
-)
-
 link_file() {
     local source_path="$1"
     local target="$2"
@@ -36,23 +23,17 @@ link_file() {
     echo "Linked: $target -> $source_path"
 }
 
-for src in "${!LINKS[@]}"; do
-    link_file "$REPO_DIR/$src" "${LINKS[$src]}"
-done
+link_file "$REPO_DIR/tmux/.tmux.conf"    "$HOME/.tmux.conf"
+link_file "$REPO_DIR/nvim"               "$HOME/.config/nvim"
+link_file "$REPO_DIR/bash/.bashrc_ext"   "$HOME/.bashrc_ext"
 
-for target in "${VSCODE_TARGETS[@]}"; do
-    link_file "$REPO_DIR/vscode/settings.json" "$target"
-done
+# VS Code settings.json is symlinked to two locations (local + remote SSH)
+link_file "$REPO_DIR/vscode/settings.json" "$HOME/.config/Code/User/settings.json"
+link_file "$REPO_DIR/vscode/settings.json" "$HOME/.vscode-server/data/Machine/settings.json"
 
 # VS Code keybindings.json is symlinked to two locations (local + remote SSH)
-VSCODE_KEYBINDINGS_TARGETS=(
-    "$HOME/.config/Code/User/keybindings.json"
-    "$HOME/.vscode-server/data/Machine/keybindings.json"
-)
-
-for target in "${VSCODE_KEYBINDINGS_TARGETS[@]}"; do
-    link_file "$REPO_DIR/vscode/keybindings.json" "$target"
-done
+link_file "$REPO_DIR/vscode/keybindings.json" "$HOME/.config/Code/User/keybindings.json"
+link_file "$REPO_DIR/vscode/keybindings.json" "$HOME/.vscode-server/data/Machine/keybindings.json"
 
 # --- vim-plug (neovim plugin manager) ---
 
@@ -97,16 +78,8 @@ else
     echo "TPM already installed."
 fi
 
-# Install tmux plugins via TPM
-TPM_INSTALL_SCRIPT="$TPM_DIR/scripts/install_plugins.sh"
-
-if [ -x "$TPM_INSTALL_SCRIPT" ]; then
-    echo "Installing tmux plugins..."
-    "$TPM_INSTALL_SCRIPT"
-    echo "Tmux plugins installed."
-else
-    echo "WARNING: TPM install script not found. Start tmux and press prefix + I to install plugins."
-fi
+# TPM install_plugins.sh requires a live tmux session; install manually instead.
+echo "Note: To install tmux plugins, open tmux and press prefix + I."
 
 # --- Done ---
 
