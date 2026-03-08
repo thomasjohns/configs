@@ -261,6 +261,11 @@ agents() {
             ;;
     esac
 
+    if [ -z "$TMUX" ]; then
+        echo "Error: must be inside a tmux session"
+        return 1
+    fi
+
     if ! git rev-parse --git-dir >/dev/null 2>&1; then
         echo "Error: not inside a git repository"
         return 1
@@ -299,13 +304,8 @@ agents() {
     # Note: array slicing ([@]:offset:length) uses 0-based offsets in both bash and zsh
     local first_wt="${wt_paths[*]:0:1}"
     local first_pane
-    if [ -n "$TMUX" ]; then
-        first_pane="$(tmux display-message -p '#{pane_id}')"
-        tmux send-keys -t "$first_pane" "cd '$first_wt'" C-m
-    else
-        tmux new-session -d -s agents -c "$first_wt"
-        first_pane="$(tmux list-panes -t agents:0 -F '#{pane_id}' | head -1)"
-    fi
+    first_pane="$(tmux display-message -p '#{pane_id}')"
+    tmux send-keys -t "$first_pane" "cd '$first_wt'" C-m
 
     # Create columns via horizontal splits
     local col_panes=("$first_pane")
@@ -333,8 +333,4 @@ agents() {
         tmux send-keys -t "$pane" "$agent_cmd" C-m
     done
 
-    # Attach if we created a new session
-    if [ -z "$TMUX" ]; then
-        tmux attach-session -t agents
-    fi
 }
