@@ -324,7 +324,7 @@ agents() {
     # Split each column into top/bottom rows
     local _j=0
     for pane in "${col_panes[@]}"; do
-        tmux split-window -v -t "$pane" -c "${wt_paths[*]:$_j:1}"
+        tmux split-window -v -p 25 -t "$pane" -c "${wt_paths[*]:$_j:1}"
         _j=$((_j + 1))
     done
 
