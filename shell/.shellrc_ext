@@ -1,6 +1,6 @@
-# bashrc extensions
-# Source this file from your main ~/.bashrc:
-#   if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi
+# Shell extensions (bash/zsh compatible)
+# Source this file from your ~/.bashrc or ~/.zshrc:
+#   if [ -f ~/.shellrc_ext ]; then . ~/.shellrc_ext; fi
 
 # --- Aliases ---
 alias l='eza'
@@ -10,6 +10,7 @@ alias ls='eza --color=auto'
 alias j='just'
 alias k='kubectl'
 alias gc='gcloud'
+alias claude-yolo='claude --dangerously-skip-permissions'
 
 # --- Environment Variables ---
 export EDITOR=nvim
@@ -295,21 +296,24 @@ agents() {
     done
 
     # Set up tmux
+    # Note: array slicing ([@]:offset:length) uses 0-based offsets in both bash and zsh
+    local first_wt="${wt_paths[*]:0:1}"
     local first_pane
     if [ -n "$TMUX" ]; then
         first_pane="$(tmux display-message -p '#{pane_id}')"
-        tmux send-keys -t "$first_pane" "cd '${wt_paths[0]}'" C-m
+        tmux send-keys -t "$first_pane" "cd '$first_wt'" C-m
     else
-        tmux new-session -d -s agents -c "${wt_paths[0]}"
+        tmux new-session -d -s agents -c "$first_wt"
         first_pane="$(tmux list-panes -t agents:0 -F '#{pane_id}' | head -1)"
     fi
 
     # Create columns via horizontal splits
     local col_panes=("$first_pane")
     local last_pane="$first_pane"
-    for i in $(seq 2 "$n"); do
+    local wt
+    for wt in "${wt_paths[@]:1}"; do
         local new_pane
-        new_pane="$(tmux split-window -h -t "$last_pane" -c "${wt_paths[$((i-1))]}" -P -F '#{pane_id}')"
+        new_pane="$(tmux split-window -h -t "$last_pane" -c "$wt" -P -F '#{pane_id}')"
         col_panes+=("$new_pane")
         last_pane="$new_pane"
     done
@@ -318,8 +322,10 @@ agents() {
     tmux select-layout -t "$first_pane" even-horizontal
 
     # Split each column into top/bottom rows
-    for i in $(seq 0 $((n-1))); do
-        tmux split-window -v -t "${col_panes[$i]}" -c "${wt_paths[$i]}"
+    local _j=0
+    for pane in "${col_panes[@]}"; do
+        tmux split-window -v -t "$pane" -c "${wt_paths[*]:$_j:1}"
+        _j=$((_j + 1))
     done
 
     # Start agent in each top pane

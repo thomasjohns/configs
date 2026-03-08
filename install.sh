@@ -25,7 +25,7 @@ link_file() {
 
 link_file "$REPO_DIR/tmux/.tmux.conf"    "$HOME/.tmux.conf"
 link_file "$REPO_DIR/nvim"               "$HOME/.config/nvim"
-link_file "$REPO_DIR/bash/.bashrc_ext"   "$HOME/.bashrc_ext"
+link_file "$REPO_DIR/shell/.shellrc_ext"  "$HOME/.shellrc_ext"
 
 # VS Code settings.json is symlinked to two locations (local + remote SSH)
 link_file "$REPO_DIR/vscode/settings.json" "$HOME/.config/Code/User/settings.json"
@@ -84,5 +84,5 @@ echo "Note: To install tmux plugins, open tmux and press prefix + I."
 # --- Done ---
 
 echo ""
-echo "Done! To use the bashrc extensions, add this to your ~/.bashrc:"
-echo '  if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi'
+echo "Done! To use the shell extensions, add this to your ~/.bashrc or ~/.zshrc:"
+echo '  if [ -f ~/.shellrc_ext ]; then . ~/.shellrc_ext; fi'
