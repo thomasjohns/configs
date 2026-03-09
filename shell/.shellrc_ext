@@ -11,6 +11,7 @@ alias j='just'
 alias k='kubectl'
 alias gc='gcloud'
 alias claude-yolo='claude --dangerously-skip-permissions'
+alias prompts='nvim ~/.prompts'
 
 # --- Environment Variables ---
 export EDITOR=nvim
