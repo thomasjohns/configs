@@ -322,12 +322,16 @@ agents() {
     # Even out columns
     tmux select-layout -t "$first_pane" even-horizontal
 
-    # Split each column into top/bottom rows
+    # Split each column into top (60%), middle (20%), bottom (20%) rows
+    local mid_panes=()
     local bot_panes=()
     local _j=0
     for pane in "${col_panes[@]}"; do
+        local mid_pane
+        mid_pane="$(tmux split-window -v -p 40 -t "$pane" -c "${wt_paths[*]:$_j:1}" -P -F '#{pane_id}')"
+        mid_panes+=("$mid_pane")
         local bot_pane
-        bot_pane="$(tmux split-window -v -p 25 -t "$pane" -c "${wt_paths[*]:$_j:1}" -P -F '#{pane_id}')"
+        bot_pane="$(tmux split-window -v -p 50 -t "$mid_pane" -c "${wt_paths[*]:$_j:1}" -P -F '#{pane_id}')"
         bot_panes+=("$bot_pane")
         _j=$((_j + 1))
     done
@@ -337,9 +341,9 @@ agents() {
         tmux send-keys -t "$pane" "$agent_cmd" C-m
     done
 
-    # Pull remote changes in each bottom pane if the branch exists on the remote
+    # Pull remote changes in middle panes if the branch exists on the remote
     _j=0
-    for pane in "${bot_panes[@]}"; do
+    for pane in "${mid_panes[@]}"; do
         local branch="agent$((_j + 1))"
         tmux send-keys -t "$pane" "git fetch origin $branch 2>/dev/null && git pull origin $branch" C-m
         _j=$((_j + 1))
