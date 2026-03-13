@@ -245,13 +245,15 @@ _wt_bare() {
 
 agents() {
     if [ -z "$1" ]; then
-        echo "Usage: agents <number> [agent]"
+        echo "Usage: agents <number> [agent] [prefix]"
         echo "  agent: claude (default), copilot"
+        echo "  prefix: worktree name prefix (default: agent) e.g. 'mono' -> mono1, mono2, ..."
         return 1
     fi
 
     local n="$1"
     local agent="${2:-claude}"
+    local prefix="${3:-agent}"
     local agent_cmd
     case "$agent" in
         claude)  agent_cmd="claude --dangerously-skip-permissions" ;;
@@ -287,7 +289,7 @@ agents() {
     # Resolve or create worktrees
     local wt_paths=()
     for i in $(seq 1 "$n"); do
-        local wt_name="agent$i"
+        local wt_name="${prefix}$i"
         local wt_path
         wt_path="$(git worktree list --porcelain | grep "^worktree " | sed 's/^worktree //' | grep "/${wt_name}$" | head -1)"
         if [ -z "$wt_path" ]; then
@@ -344,7 +346,7 @@ agents() {
     # Pull remote changes in middle panes if the branch exists on the remote
     _j=0
     for pane in "${mid_panes[@]}"; do
-        local branch="agent$((_j + 1))"
+        local branch="${prefix}$((_j + 1))"
         tmux send-keys -t "$pane" "git fetch origin $branch 2>/dev/null && git pull origin $branch" C-m
         _j=$((_j + 1))
     done
