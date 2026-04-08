@@ -18,6 +18,8 @@ export EDITOR=nvim
 export VISUAL=nvim
 
 # --- PATH additions ---
+# Go installs
+export PATH=$PATH:$(go env GOPATH)/bin
 
 # --- Prompt ---
 
