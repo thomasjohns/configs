@@ -20,6 +20,8 @@ export VISUAL=nvim
 # --- PATH additions ---
 # Go installs
 export PATH=$PATH:$(go env GOPATH)/bin
+# Bun installs
+export PATH=$HOME/.bun/bin:$PATH
 
 # --- Prompt ---
 
