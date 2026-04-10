@@ -88,9 +88,12 @@ Plug 'rust-lang/rust.vim'
 Plug 'leafgarland/typescript-vim'  " syntax highlighting for typescript
 Plug 'peitalin/vim-jsx-typescript'  " syntax highlighting for typescript in jsx
 Plug 'tell-k/vim-autopep8'
-Plug 'axkirillov/unified.nvim'
+Plug 'sindrets/diffview.nvim'
 Plug 'tpope/vim-fugitive'
 call plug#end()
+
+command! -nargs=0 DO DiffviewOpen
+command! -nargs=0 DC DiffviewClose
 
 colorscheme gruvbox
 
