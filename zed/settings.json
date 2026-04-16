@@ -1,0 +1,31 @@
+{
+  // Enable vim mode so the keymap bindings below work as vim motions.
+  "vim_mode": true,
+
+  // --- Theme / Appearance ---
+  "theme": "Gruvbox Dark",
+  "cursor_blink": false,
+
+  // --- Editor ---
+  // Matches nvim: tabstop/softtabstop/shiftwidth=4, expandtab.
+  "tab_size": 4,
+  "hard_tabs": false,
+  // Matches nvim scrolloff=6.
+  "vertical_scroll_margin": 6,
+  // Matches nvim colorcolumn=100.
+  "preferred_line_length": 100,
+  "show_wrap_guides": true,
+  "wrap_guides": [100],
+  // Matches VS Code editor.minimap.enabled=false.
+  "minimap": {
+    "show": "never"
+  },
+  // Matches VS Code workbench.editor.enablePreview=false.
+  "preview_tabs": {
+    "enabled": false
+  },
+
+  // --- Files ---
+  // Matches VS Code files.eol="\n".
+  "default_line_ending": "unix"
+}

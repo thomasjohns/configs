@@ -15,6 +15,9 @@ configs/
 ├── vscode/
 │   ├── settings.json      # VS Code settings (local + remote SSH)
 │   └── keybindings.json   # VS Code keybindings (neovim-style)
+├── zed/
+│   ├── settings.json      # Zed settings (vim mode, gruvbox, etc.)
+│   └── keymap.json        # Zed keymap mirroring the nvim/VS Code bindings
 ├── install.sh             # symlink installer + plugin setup
 └── README.md
 ```
@@ -63,6 +66,8 @@ The script will:
 | `~/.vscode-server/data/Machine/settings.json` | `~/configs/vscode/settings.json` |
 | `~/.config/Code/User/keybindings.json` | `~/configs/vscode/keybindings.json` |
 | `~/.vscode-server/data/Machine/keybindings.json` | `~/configs/vscode/keybindings.json` |
+| `~/.config/zed/settings.json` | `~/configs/zed/settings.json` |
+| `~/.config/zed/keymap.json` | `~/configs/zed/keymap.json` |
 
 3. Source the bash extensions by adding this line to your `~/.bashrc`:
 

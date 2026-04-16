@@ -35,6 +35,10 @@ link_file "$REPO_DIR/vscode/settings.json" "$HOME/.vscode-server/data/Machine/se
 link_file "$REPO_DIR/vscode/keybindings.json" "$HOME/.config/Code/User/keybindings.json"
 link_file "$REPO_DIR/vscode/keybindings.json" "$HOME/.vscode-server/data/Machine/keybindings.json"
 
+# Zed settings and keymap
+link_file "$REPO_DIR/zed/settings.json" "$HOME/.config/zed/settings.json"
+link_file "$REPO_DIR/zed/keymap.json"   "$HOME/.config/zed/keymap.json"
+
 # --- vim-plug (neovim plugin manager) ---
 
 VIM_PLUG_URL="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"

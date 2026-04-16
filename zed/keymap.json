@@ -1,0 +1,78 @@
+[
+  // --- File Finding / Sidebar (Ctrl-prefixed, mirror VS Code keybindings.json) ---
+  {
+    "context": "Workspace",
+    "bindings": {
+      // Ctrl+y -> toggle sidebar (NERDTreeToggle / toggleSidebarVisibility).
+      "ctrl-y": "workspace::ToggleLeftDock"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      // Ctrl+g -> fzf :Files / quick open all files.
+      "ctrl-g": "file_finder::Toggle",
+      // Ctrl+p -> fzf :GFiles (Zed's file finder covers this too).
+      "ctrl-p": "file_finder::Toggle",
+      // Ctrl+f -> reveal active file in project panel (CocCommand explorer).
+      "ctrl-f": "pane::RevealInProjectPanel"
+    }
+  },
+
+  // --- Normal-mode vim bindings (mirror vim.normalModeKeyBindingsNonRecursive) ---
+  {
+    "context": "VimControl && !menu && vim_mode == normal",
+    "bindings": {
+      // Buffer (tab) navigation.
+      "g n": "pane::ActivateNextItem",
+      "g p": "pane::ActivatePrevItem",
+      "g w": "pane::CloseActiveItem",
+      "; ;": "tab_switcher::Toggle",
+
+      // Editor splitting.
+      "g s": "pane::SplitRight",
+      "g b": "pane::SplitDown",
+
+      // Split navigation.
+      "g j": ["workspace::ActivatePaneInDirection", "Down"],
+      "g k": ["workspace::ActivatePaneInDirection", "Up"],
+      "g l": ["workspace::ActivatePaneInDirection", "Right"],
+      "g h": ["workspace::ActivatePaneInDirection", "Left"],
+
+      // Code navigation (coc-definition, coc-type-definition, etc.).
+      "g d": "editor::GoToDefinition",
+      "g y": "editor::GoToTypeDefinition",
+      "g i": "editor::GoToImplementation",
+      "g r": "editor::FindAllReferences",
+
+      // Hover / documentation.
+      "shift-k": "editor::Hover",
+
+      // Diagnostics navigation (coc-diagnostic-prev/next).
+      "{": "editor::GoToPrevDiagnostic",
+      "}": "editor::GoToDiagnostic",
+
+      // Git hunk navigation (GitGutterPrevHunk/NextHunk).
+      "(": "editor::GoToPrevHunk",
+      ")": "editor::GoToHunk",
+
+      // Leader (<space>) bindings.
+      "space r n": "editor::Rename",
+      "space f": "editor::Format",
+      "space q f": "editor::ToggleCodeActions",
+      "space a c": "editor::ToggleCodeActions",
+      "space a": "diagnostics::Deploy",
+      "space o": "outline::Toggle",
+      "space s": "project_symbols::Toggle",
+      "space c": "command_palette::Toggle"
+    }
+  },
+
+  // --- Visual-mode vim bindings (mirror vim.visualModeKeyBindingsNonRecursive) ---
+  {
+    "context": "VimControl && !menu && vim_mode == visual",
+    "bindings": {
+      "space f": "editor::FormatSelections"
+    }
+  }
+]
