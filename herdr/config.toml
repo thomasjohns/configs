@@ -1,0 +1,56 @@
+# Herdr configuration
+# Symlinked to ~/.config/herdr/config.toml by install.sh.
+# Full option reference: herdr --default-config
+# Validate: herdr config check   Apply to running server: herdr server reload-config (prefix+shift+r)
+# Docs: https://herdr.dev/docs/configuration/
+
+onboarding = false
+
+[theme]
+# Match the Gruvbox Dark theme used in Ghostty and Zed.
+name = "gruvbox"
+auto_switch = false
+
+[keys]
+# Mirror tmux/.tmux.conf: same leader, same prefix-free pane/tab keys, tmux's
+# default split keys, and a few tmux muscle-memory aliases. Each list keeps
+# Herdr's default binding first so the built-in help (prefix+?) still applies.
+prefix = "ctrl+space"
+
+# tmux: bind -n C-h/j/k/l and C-Left/Down/Up/Right -> select-pane
+focus_pane_left  = ["prefix+h", "ctrl+h", "ctrl+left"]
+focus_pane_down  = ["prefix+j", "ctrl+j", "ctrl+down"]
+focus_pane_up    = ["prefix+k", "ctrl+k", "ctrl+up"]
+focus_pane_right = ["prefix+l", "ctrl+l", "ctrl+right"]
+
+# tmux: bind -n C-t new-window / C-n next-window / C-x kill-pane
+new_tab    = ["prefix+c", "ctrl+t"]
+next_tab   = ["prefix+n", "ctrl+n"]
+close_pane = ["prefix+x", "ctrl+x"]
+
+# tmux default split keys: % = side by side, " = stacked
+split_vertical   = ["prefix+v", "prefix+%"]
+split_horizontal = ["prefix+minus", 'prefix+"']
+
+# tmux defaults that Herdr binds to different keys
+detach           = ["prefix+q", "prefix+d"]                # tmux: prefix+d
+rename_tab       = ["prefix+shift+t", "prefix+comma"]      # tmux: prefix+,
+close_tab        = ["prefix+shift+x", "prefix+ampersand"]  # tmux: prefix+&
+rename_workspace = ["prefix+shift+w", "prefix+$"]          # tmux: prefix+$ (rename session)
+last_pane        = "prefix+;"                              # tmux: prefix+; (last pane)
+
+[ui]
+# tmux creates windows immediately; skip Herdr's name prompt so ctrl+t feels the same.
+prompt_new_tab_name = false
+
+# tmux-style splitters (no outer frame, shared dividers). Uncomment to try.
+# pane_outer_borders = false
+# pane_gaps = false
+
+[ui.toast]
+delivery = "off"
+
+# Workspace automation is not set up yet. Starting points when it is:
+#   herdr workspace create --help   # scripted workspaces over the socket API
+#   herdr worktree --help           # git worktree workspaces (compare `wt` in shell/.shellrc_ext)
+#   [[keys.command]]                # bind a key to a shell/pane/popup command; see herdr --default-config

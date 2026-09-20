@@ -15,3 +15,6 @@ vim_mode_default = true
 
 [tui.model_availability_nux]
 gpt-6-astra = 3
+
+[features]
+hooks = true

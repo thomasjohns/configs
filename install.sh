@@ -48,6 +48,37 @@ link_file "$REPO_DIR/codex/config.toml" "$HOME/.codex/config.toml"
 # Ghostty terminal config
 link_file "$REPO_DIR/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
 
+# Herdr terminal workspace manager config
+link_file "$REPO_DIR/herdr/config.toml" "$HOME/.config/herdr/config.toml"
+
+# Herdr agent skill, linked into each coding agent's personal skills directory.
+# The SKILL.md file is linked (not the herdr/ directory) so skill discovery that
+# stats directory entries still sees a real directory.
+link_file "$REPO_DIR/herdr/skill/SKILL.md" "$HOME/.claude/skills/herdr/SKILL.md"
+link_file "$REPO_DIR/herdr/skill/SKILL.md" "$HOME/.codex/skills/herdr/SKILL.md"
+link_file "$REPO_DIR/herdr/skill/SKILL.md" "$HOME/.pi/agent/skills/herdr/SKILL.md"
+link_file "$REPO_DIR/herdr/skill/SKILL.md" "$HOME/.copilot/skills/herdr/SKILL.md"
+
+# --- Herdr skill refresh + agent integrations ---
+
+if command -v herdr &>/dev/null; then
+    echo ""
+    echo "Refreshing herdr/skill/SKILL.md from the installed herdr binary..."
+    herdr --skill > "$REPO_DIR/herdr/skill/SKILL.md"
+
+    # Integrations install lifecycle hooks so Herdr can track agent state and
+    # restore native sessions. They write hook scripts outside this repo and add
+    # hook entries to claude/settings.json and codex/config.toml (via symlink).
+    echo "Installing herdr agent integrations..."
+    for agent in claude codex pi copilot; do
+        herdr integration install "$agent"
+    done
+else
+    echo ""
+    echo "WARNING: herdr not found. Skipping skill refresh and agent integrations."
+    echo "  Install: curl -fsSL https://herdr.dev/install.sh | sh"
+fi
+
 # --- vim-plug (neovim plugin manager) ---
 
 VIM_PLUG_URL="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
