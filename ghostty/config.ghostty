@@ -1,0 +1,12 @@
+# Ghostty configuration
+# Symlinked to ~/.config/ghostty/config.ghostty by install.sh.
+# Full option reference: ghostty +show-config --default --docs
+# Reload a running Ghostty with cmd+shift+, after editing.
+
+# Match the Gruvbox Dark theme used in Zed.
+theme = Gruvbox Dark
+cursor-style = block
+cursor-style-blink = false
+
+# Disable all common bell features (attention bouncing, title markers, etc.)
+bell-features = no-attention,no-title,no-system,no-audio,no-border

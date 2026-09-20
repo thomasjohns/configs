@@ -1,0 +1,17 @@
+# Codex CLI configuration
+# Symlinked to ~/.codex/config.toml by install.sh.
+# Reference: https://github.com/openai/codex/blob/main/docs/config.md
+# Note: Codex also writes runtime state here (trusted projects, [tui.*_nux] counters).
+
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
+fast_mode = false
+
+[projects."/Users/thomas"]
+trust_level = "trusted"
+
+[tui]
+vim_mode_default = true
+
+[tui.model_availability_nux]
+gpt-6-astra = 3

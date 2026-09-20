@@ -1,6 +1,6 @@
 # configs
 
-My configuration files for tmux, neovim, and bash.
+My configuration files for tmux, neovim, shell, VS Code, Zed, Claude Code, Codex, and Ghostty.
 
 ## Contents
 
@@ -18,6 +18,9 @@ configs/
 ├── zed/
 │   ├── settings.json      # Zed settings (vim mode, gruvbox, etc.)
 │   └── keymap.json        # Zed keymap mirroring the nvim/VS Code bindings
+├── claude/settings.json   # Claude Code global settings (model, effort, vim editor mode)
+├── codex/config.toml      # Codex CLI global config (model, effort, vim mode)
+├── ghostty/config.ghostty # Ghostty terminal config (theme)
 ├── install.sh             # symlink installer + plugin setup
 └── README.md
 ```
@@ -68,6 +71,9 @@ The script will:
 | `~/.vscode-server/data/Machine/keybindings.json` | `~/configs/vscode/keybindings.json` |
 | `~/.config/zed/settings.json` | `~/configs/zed/settings.json` |
 | `~/.config/zed/keymap.json` | `~/configs/zed/keymap.json` |
+| `~/.claude/settings.json` | `~/configs/claude/settings.json` |
+| `~/.codex/config.toml` | `~/configs/codex/config.toml` |
+| `~/.config/ghostty/config.ghostty` | `~/configs/ghostty/config.ghostty` |
 
 3. Source the bash extensions by adding this line to your `~/.bashrc`:
 
@@ -141,4 +147,4 @@ Since configs are symlinked, pulling new changes takes effect immediately:
 cd ~/configs && git pull
 ```
 
-For neovim plugins, run `:PlugUpdate` inside neovim. For tmux plugins, press `prefix + U` in tmux. For bash, start a new shell or run `source ~/.bashrc`. For tmux, reload with `tmux source-file ~/.tmux.conf`.
+Claude Code and Codex read their settings on launch, so restart them after a change. Ghostty reloads with `cmd+shift+,`. For neovim plugins, run `:PlugUpdate` inside neovim. For tmux plugins, press `prefix + U` in tmux. For bash, start a new shell or run `source ~/.bashrc`. For tmux, reload with `tmux source-file ~/.tmux.conf`.

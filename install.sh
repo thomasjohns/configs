@@ -39,6 +39,15 @@ link_file "$REPO_DIR/vscode/keybindings.json" "$HOME/.vscode-server/data/Machine
 link_file "$REPO_DIR/zed/settings.json" "$HOME/.config/zed/settings.json"
 link_file "$REPO_DIR/zed/keymap.json"   "$HOME/.config/zed/keymap.json"
 
+# Claude Code global settings
+link_file "$REPO_DIR/claude/settings.json" "$HOME/.claude/settings.json"
+
+# Codex CLI global config
+link_file "$REPO_DIR/codex/config.toml" "$HOME/.codex/config.toml"
+
+# Ghostty terminal config
+link_file "$REPO_DIR/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
+
 # --- vim-plug (neovim plugin manager) ---
 
 VIM_PLUG_URL="https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
