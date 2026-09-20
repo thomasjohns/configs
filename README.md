@@ -11,7 +11,7 @@ configs/
 │   ├── init.lua           # entry point — sources init.vim, then applies Lua config
 │   ├── init.vim           # current vimscript configuration
 │   └── coc-settings.json  # CoC language server settings
-├── bash/.bashrc_ext       # bash extensions (aliases, functions, etc.)
+├── shell/.shellrc_ext     # shell extensions (aliases, functions) for bash and zsh
 ├── vscode/
 │   ├── settings.json      # VS Code settings (local + remote SSH)
 │   └── keybindings.json   # VS Code keybindings (neovim-style)
@@ -64,7 +64,7 @@ The script will:
 |---|---|
 | `~/.tmux.conf` | `~/configs/tmux/.tmux.conf` |
 | `~/.config/nvim` | `~/configs/nvim/` |
-| `~/.bashrc_ext` | `~/configs/bash/.bashrc_ext` |
+| `~/.shellrc_ext` | `~/configs/shell/.shellrc_ext` |
 | `~/.config/Code/User/settings.json` | `~/configs/vscode/settings.json` |
 | `~/.vscode-server/data/Machine/settings.json` | `~/configs/vscode/settings.json` |
 | `~/.config/Code/User/keybindings.json` | `~/configs/vscode/keybindings.json` |
@@ -75,10 +75,10 @@ The script will:
 | `~/.codex/config.toml` | `~/configs/codex/config.toml` |
 | `~/.config/ghostty/config.ghostty` | `~/configs/ghostty/config.ghostty` |
 
-3. Source the bash extensions by adding this line to your `~/.bashrc`:
+3. Source the shell extensions by adding this line to your `~/.bashrc` or `~/.zshrc`:
 
 ```bash
-if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi
+if [ -f ~/.shellrc_ext ]; then . ~/.shellrc_ext; fi
 ```
 
 4. Open neovim once to let CoC auto-install its extensions (coc-omnisharp, coc-prettier, coc-pyright).
@@ -120,10 +120,10 @@ The following tasks can be added to an Ansible playbook to fully provision a new
   args:
     executable: /bin/bash
 
-- name: Source bashrc extensions from ~/.bashrc
+- name: Source shell extensions from ~/.bashrc
   ansible.builtin.lineinfile:
     path: "{{ ansible_user_dir }}/.bashrc"
-    line: 'if [ -f ~/.bashrc_ext ]; then . ~/.bashrc_ext; fi'
+    line: 'if [ -f ~/.shellrc_ext ]; then . ~/.shellrc_ext; fi'
     state: present
 ```
 
@@ -147,4 +147,4 @@ Since configs are symlinked, pulling new changes takes effect immediately:
 cd ~/configs && git pull
 ```
 
-Claude Code and Codex read their settings on launch, so restart them after a change. Ghostty reloads with `cmd+shift+,`. For neovim plugins, run `:PlugUpdate` inside neovim. For tmux plugins, press `prefix + U` in tmux. For bash, start a new shell or run `source ~/.bashrc`. For tmux, reload with `tmux source-file ~/.tmux.conf`.
+Claude Code and Codex read their settings on launch, so restart them after a change. Ghostty reloads with `cmd+shift+,`. For neovim plugins, run `:PlugUpdate` inside neovim. For tmux plugins, press `prefix + U` in tmux. For the shell extensions, start a new shell or re-source your `~/.bashrc` or `~/.zshrc`. For tmux, reload with `tmux source-file ~/.tmux.conf`.
