@@ -18,10 +18,15 @@ auto_switch = false
 prefix = "ctrl+space"
 
 # tmux: bind -n C-h/j/k/l and C-Left/Down/Up/Right -> select-pane
+# prefix+j/k are given to workspace switching below, so pane up/down is prefix-free only.
 focus_pane_left  = ["prefix+h", "ctrl+h", "ctrl+left"]
-focus_pane_down  = ["prefix+j", "ctrl+j", "ctrl+down"]
-focus_pane_up    = ["prefix+k", "ctrl+k", "ctrl+up"]
+focus_pane_down  = ["ctrl+j", "ctrl+down"]
+focus_pane_up    = ["ctrl+k", "ctrl+up"]
 focus_pane_right = ["prefix+l", "ctrl+l", "ctrl+right"]
+
+# Walk the sidebar workspace list: j = down (next), k = up (previous)
+next_workspace     = "prefix+j"
+previous_workspace = "prefix+k"
 
 # tmux: bind -n C-t new-window / C-n next-window / C-x kill-pane
 new_tab    = ["prefix+c", "ctrl+t"]
